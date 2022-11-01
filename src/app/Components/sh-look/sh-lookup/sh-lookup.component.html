@@ -1,0 +1,39 @@
+<p>sh-lookup works!</p>
+
+<div>
+  <p-autoComplete
+    [suggestions]="AutoCompleteData"
+    (completeMethod)="filterAutoData($event)"
+    (onSelect)="selectedAutoValue($event)"
+    (onClear)="OnClearedAutoComplete($event)"
+    [showEmptyMessage]="true"
+    field="title"
+    [minLength]="config.minSearchLength"
+    *ngIf="!config.isFilterable"
+    [placeholder]="cms.label"
+  ></p-autoComplete>
+  <p
+    style="margin: 0; color: red"
+    *ngIf="formControlName.value == null && !config.isFilterable"
+  >
+    Please select the option
+  </p>
+</div>
+
+<div>
+  <p-dropdown
+    [options]="dropdownData"
+    [placeholder]="cms.label"
+    [showClear]="true"
+    optionLabel="title"
+    *ngIf="config.isFilterable"
+    (onChange)="changeDropdown($event)"
+    (onClear)="OnClearedDropdown($event)"
+  ></p-dropdown>
+  <p
+    style="margin: 0; color: red"
+    *ngIf="formControlName.value == null && config.isFilterable"
+  >
+    Please select the option
+  </p>
+</div>
