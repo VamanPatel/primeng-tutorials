@@ -25,7 +25,7 @@ export class AppComponent {
   };
   option1: ConfigClass = {
     message: 'hi',
-    allowCustom: false,
+    allowCustom: true,
     uri: 'https://dummyjson.com/products',
     minSearchLength: 0,
     filterBy: 'name',
@@ -35,7 +35,7 @@ export class AppComponent {
 
   constructor() {
     this.selectedValue = new FormControl(1, Validators.required);
-    this.selectedValue1 = new FormControl(null, Validators.required);
+    this.selectedValue1 = new FormControl(2, Validators.required);
     console.log(this.selectedValue, 'this.selectedValue');
   }
 }

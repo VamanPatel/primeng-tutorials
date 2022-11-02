@@ -60,6 +60,7 @@ export class ShLookupComponent implements OnInit {
     if (e.value === undefined) {
       this.formControlName.reset();
       console.log(this.formControlName.value, 'line 68');
+      this.showError = true;
     }
   }
 
@@ -86,6 +87,7 @@ export class ShLookupComponent implements OnInit {
     if (e.value === undefined) {
       this.formControlName.reset();
       console.log(this.formControlName.value, 'line 68');
+      this.showError = true;
     }
   }
 
@@ -106,17 +108,21 @@ export class ShLookupComponent implements OnInit {
   }
 
   getResult(filterBy: string) {
-    this.http
-      .get(`${this.config.uri}?filterBy=${filterBy}`)
-      .subscribe((i: any) => {
-        this.dropdownData = i.products;
-        console.log(this.dropdownData);
-        if (this.formControlName.value) {
+    this.http.get(`${this.config.uri}`).subscribe((i: any) => {
+      this.dropdownData = i.products;
+      this.AutoCompleteData = i.products;
+      console.log(this.dropdownData);
+      if (this.formControlName.value) {
+        setTimeout(() => {
           this.selectedDropdown = this.dropdownData.filter((i) => {
             return i[this.config.return] === this.formControlName.value;
           })[0];
-          console.log(this.selectedDropdown, 'this.selectedDropdown');
-        }
-      });
+          this.selectedAutoComplete = this.AutoCompleteData.filter((i) => {
+            return i[this.config.return] === this.formControlName.value;
+          })[0];
+        }, 0);
+        console.log(this.selectedDropdown, 'this.selectedDropdown');
+      }
+    });
   }
 }

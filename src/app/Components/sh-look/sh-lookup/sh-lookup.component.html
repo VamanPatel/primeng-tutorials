@@ -15,12 +15,13 @@
     [placeholder]="cms.label"
     (onBlur)="blurAutoComplete($event)"
   ></p-autoComplete>
-  <p
-    style="margin: 0; color: red"
+  <br />
+  <small
+    class="p-error block"
     *ngIf="formControlName.invalid && !config.isFilterable && showError"
   >
     Please select the option
-  </p>
+  </small>
 </div>
 
 <!-- --------------------------------------------- dropdown ---------------------------------------------- -->
@@ -37,10 +38,11 @@
     (onClear)="OnClearedDropdown($event)"
     (onBlur)="blurDropdown($event)"
   ></p-dropdown>
-  <p
-    style="margin: 0; color: red"
+  <br />
+  <small
+    class="p-error block"
     *ngIf="config.isFilterable && formControlName.invalid && showError"
   >
     Please select the option
-  </p>
+  </small>
 </div>
