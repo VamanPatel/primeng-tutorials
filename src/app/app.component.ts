@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigClass } from './Modals/configModal';
 
 @Component({
@@ -34,8 +34,8 @@ export class AppComponent {
   };
 
   constructor() {
-    this.selectedValue = new FormControl(1);
-    this.selectedValue1 = new FormControl(null);
+    this.selectedValue = new FormControl(1, Validators.required);
+    this.selectedValue1 = new FormControl(null, Validators.required);
     console.log(this.selectedValue, 'this.selectedValue');
   }
 }

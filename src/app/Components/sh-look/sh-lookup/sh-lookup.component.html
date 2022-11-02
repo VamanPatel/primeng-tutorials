@@ -1,5 +1,6 @@
 <p>sh-lookup works!</p>
 
+<!-- ------------------------------------------- autocomplete -------------------------------------------- -->
 <div>
   <p-autoComplete
     [suggestions]="AutoCompleteData"
@@ -7,32 +8,38 @@
     (onSelect)="selectedAutoValue($event)"
     (onClear)="OnClearedAutoComplete($event)"
     [showEmptyMessage]="true"
+    [(ngModel)]="selectedAutoComplete"
     field="title"
     [minLength]="config.minSearchLength"
     *ngIf="!config.isFilterable"
     [placeholder]="cms.label"
+    (onBlur)="blurAutoComplete($event)"
   ></p-autoComplete>
   <p
     style="margin: 0; color: red"
-    *ngIf="formControlName.value == null && !config.isFilterable"
+    *ngIf="formControlName.invalid && !config.isFilterable && showError"
   >
     Please select the option
   </p>
 </div>
 
+<!-- --------------------------------------------- dropdown ---------------------------------------------- -->
+
 <div>
   <p-dropdown
     [options]="dropdownData"
     [placeholder]="cms.label"
+    [(ngModel)]="selectedDropdown"
     [showClear]="true"
     optionLabel="title"
     *ngIf="config.isFilterable"
     (onChange)="changeDropdown($event)"
     (onClear)="OnClearedDropdown($event)"
+    (onBlur)="blurDropdown($event)"
   ></p-dropdown>
   <p
     style="margin: 0; color: red"
-    *ngIf="formControlName.value == null && config.isFilterable"
+    *ngIf="config.isFilterable && formControlName.invalid && showError"
   >
     Please select the option
   </p>

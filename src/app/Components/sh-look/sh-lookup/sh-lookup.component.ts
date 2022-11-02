@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ConfigClass } from 'src/app/Modals/configModal';
 
 @Component({
@@ -10,29 +11,21 @@ import { ConfigClass } from 'src/app/Modals/configModal';
 export class ShLookupComponent implements OnInit {
   @Input() config!: ConfigClass;
   @Input() cms!: any;
-  @Input() formControlName!: any;
+  @Input() formControlName!: FormControl;
 
   selectedAutoComplete: any;
   selectedDropdown: any;
 
   dropdownData: any[] = [];
   AutoCompleteData: any[] = [];
+
+  showError: boolean = false;
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     console.log(this.config);
-    console.log(this.formControlName.value, 'formControlName');
+    console.log(this.formControlName.invalid, 'formControlName');
     this.getResult(this.config.filterBy);
-  }
-
-  getResult(filterBy: string) {
-    this.http
-      .get(`${this.config.uri}?filterBy=${filterBy}`)
-      .subscribe((i: any) => {
-        this.dropdownData = i.products;
-        this.AutoCompleteData = i.products;
-        console.log(this.dropdownData);
-      });
   }
 
   /* ----------------------------------- filtering data in autocomplete ----------------------------------- */
@@ -49,7 +42,7 @@ export class ShLookupComponent implements OnInit {
           .subscribe((i: any) => {
             this.AutoCompleteData = i.products;
             if (this.AutoCompleteData.length === 0 && this.config.allowCustom) {
-              this.formControlName.value = query;
+              this.formControlName.setValue(query);
               console.log(this.formControlName.value);
             }
             console.log(this.AutoCompleteData);
@@ -69,6 +62,24 @@ export class ShLookupComponent implements OnInit {
       console.log(this.formControlName.value, 'line 68');
     }
   }
+
+  /* ------------------------------------- autocomplete select option ------------------------------------- */
+  selectedAutoValue(e: any) {
+    console.log(e, '70 line');
+    this.formControlName.setValue(e[this.config.return]);
+    console.log(this.formControlName.value);
+  }
+
+  /* ------------------------------------- blur event of AutoComplete ------------------------------------- */
+  blurAutoComplete(e: any) {
+    console.log(e.value, 'line 100');
+    console.log(this.formControlName.value, 'line 100');
+    if (!this.formControlName.value) {
+      this.showError = true;
+    }
+  }
+
+  /* ------------------------------------- onclear dropdown method ------------------------------------ */
   OnClearedDropdown(e: any) {
     console.log(e.value, 'line 73');
 
@@ -81,14 +92,31 @@ export class ShLookupComponent implements OnInit {
   /* -------------------------------------- select valuefrom dropdwon ------------------------------------- */
   changeDropdown(e: any) {
     console.log(e.value);
-    this.formControlName.value = e.value[this.config.return];
-    console.log(this.formControlName);
+    if (e.value) {
+      this.formControlName.setValue(e.value[this.config.return]);
+      console.log(this.formControlName.touched);
+    }
   }
 
-  /* ------------------------------------- autocomplete select option ------------------------------------- */
-  selectedAutoValue(e: any) {
-    console.log(e, '70 line');
-    this.formControlName.value = e[this.config.return];
-    console.log(this.formControlName.value);
+  /* --------------------------------------- blur event of dropdown --------------------------------------- */
+  blurDropdown(e: any) {
+    if (!this.formControlName.value) {
+      this.showError = true;
+    }
+  }
+
+  getResult(filterBy: string) {
+    this.http
+      .get(`${this.config.uri}?filterBy=${filterBy}`)
+      .subscribe((i: any) => {
+        this.dropdownData = i.products;
+        console.log(this.dropdownData);
+        if (this.formControlName.value) {
+          this.selectedDropdown = this.dropdownData.filter((i) => {
+            return i[this.config.return] === this.formControlName.value;
+          })[0];
+          console.log(this.selectedDropdown, 'this.selectedDropdown');
+        }
+      });
   }
 }
